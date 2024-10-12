@@ -10,22 +10,25 @@ using namespace std;
 */
 class surtidor {
 private:
-    string codigo;
-    string modelo;
-    string categoria_combustible;
-    unsigned short c_combustible;
+    string codigo, modelo,categoria_combustible;
+    unsigned short * c_combustible;
     bool estado;
-
 public:
-    //Constructor de la clase.
-    surtidor(string _codigo, string _modelo, string _categoria_combustible, bool _estado,_c_combustible);
+    //Constructor y destructor de la clase.
+    surtidor(string _codigo, string _modelo, string _categoria_combustible, bool _estado, unsigned short *_c_combustible);
+    ~surtidor();
     //metodos.
-    void Registro_venta(string cedula_cliente,string fecha, string hora,unsigned long c_dinero, char manera_pago);
-    void consultar_venta(string cedula_cliente,string fecha, string hora);
-    void actualizar_cantidad_disponible(unsigned short listros_vendidos);
+    void Registro_venta(fstream &ventas,string codigo_surtidor,string cedula_cliente, string fecha, string hora,string t_combustible, unsigned long c_dinero, char manera_pago);
+    void consultar_venta(fstream &ventas, string codigo_surtidor);
+    void actualizar_cantidad_combustible(unsigned short listros_vendidos);
     void activar(bool activa);
-    void desactivar(bool inactiva);
 };
+
+
+
+
+
+
 
 /*
 // Clase Estacion_de_servicio
