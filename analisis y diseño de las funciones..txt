@@ -1,0 +1,49 @@
+Análisis del problema:
+Teniendo en cuenta los datos entregados en la guía, se detectaron la creación de 3 clases principales: estación de servicio, surtidor,
+tanque. A cada una de estas, se le procedió con la abstracción de carácterísticas (atributos) y acciones propias de cada clase(métodos).
+
+1) Clase Estacion de servicio:
+Estacion_de_servicio:
+	Atributos:
+    		nombre, es el nombre de la estacion
+    		codigo, es el código de la estacion.
+    		gerente, Gerente del lugar.
+    		region, la región (Norte, Centro y Sur)
+    		ubi_geografica, coordenadas del lugar.
+      		islas, número o cantidad de islas de la estacíón.
+        	tanque, Tanque central de dicha estación (este a su vez es una clase)
+	Métodos:
+		constructor, constructor de la estación.
+		destructor, destructor de instancias de la estación.        
+        	poner_surtidor, añade surtidores
+        	quitar_surtidor, elimina un surtidor.
+		añadir_surtidores en una isla, instancia una cantidad de surtidores por isla, la cual puede varias entre 2 y 12.
+
+2) Surtidor:
+	Atributos:
+		codigo, es el código de la máquina, lo que la identifica de otras.
+ 		modelo, es el modelo de la máquina surtidora.
+		categoria_combustible, son las categorías de combustible disponibles en la máquina.
+   		c_combustible, es la cantidad de combustible, que tiene del tanque central (esta cambia como función amiga parámetros de la clase tanque)
+    		Estado, Define si el surtidor particular, esta activo o inactivo.
+	métodos:
+		contructor, es el encargador de inicializar los atributos al momento de hacer una instancia de la clase.
+		destructor, elimina instancias incesarias.
+		registo de venta, hace la venta de un tipo de combustible en particular.
+		revisar venta, Revisa las ventas del día, por este surtidor en particular.
+		actualizar la cantidad del combustible, este método, cambiará atributos de la clase tanque.
+		activar, activa o desactiva, el surtidor en particular.
+3) Tanque:
+	Atributos:
+		capacidad gasolina regular, Capacidad de almacenamiento de gasolina regular.
+		capacidad gasolina premiun, Capacidad de almacenamiento de gasolina premium.
+		capacidad gasolina extra, Capacidad de almacenamiento de gasolina Extra.
+	Métodos:
+		
+		contructor, es el encargador de inicializar los atributos al momento de hacer una instancia de la clase.
+		destructor, elimina instancias incesarias.
+		Entregar gasolina.
+
+Identificados los atributos y métodos es posible pasar a la implementación de la solución, instanciando las clases necesarias
+en los lugares necesarios del código para el correcto funcionamiento de la solución del problema, lo anterior incluye la implementación de las funciones de los métodos antes mostrados. Para el menú, se pensó en la creación de un suiche case, desde el cuál se controles las acciones
+pertinentes del sistema. No obstante, como se encuentra en etapa de desarrollo, aún es propensa a cambios.
