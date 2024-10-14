@@ -23,19 +23,17 @@ public:
 };
 
 
-
-/*
-
-
 class Tanque{
 private:
     unsigned short capacidad_regular;
     unsigned short capacidad_premium;
     unsigned short capacidad_ecoextra;
+    string codigo;
 public:
-    Tanque(float _capacidad_regular,float _capacidad_premium,float _capacidad_ecoextra);
+    Tanque(float _capacidad_regular,float _capacidad_premium,float _capacidad_ecoextra, string _codigo);
     ~Tanque();
-    void entregar_combustible(fstream &dispo_tanque, string c_estacion,unsigned short tipo_comb, float c_entregada);
+   // float revisar_disponibilidad(unsigned short tipo_combustible);
+    void entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada);
     //Función amiga de fugas, esta será una función de carácter general.
     friend void revisar_fugas(unsigned short c_regular, unsigned short c_premium, unsigned short c_extra,unsigned short capacidad);
 };
@@ -50,15 +48,16 @@ private:
     string region;
     string ubi_geografica;
     unsigned short c_islas;
-    Tanque tanque;
+    //Tanque tanque;
 
 public:
     // Métodos
-    void vender();            // Método para realizar una venta
-    void poner_surtidor();     // Método para agregar un surtidor
-    void quitar_surtidor();    // Método para quitar un surtidor
+    Estacion_de_servicio(string _nombre, string _codigo, string _gerente, string _region, string _ubi_geografica, unsigned short _c_islas);
+    ~Estacion_de_servicio();
+    string mostrar_codigo();
+
+
 };
 
 
-*/
 #endif // CLASES_H

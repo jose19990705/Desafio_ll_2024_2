@@ -6,6 +6,7 @@
 
 using namespace std;
 
+//--------------------Métodos de la clase Surtidor--------------------------------------
 // Definición del constructor.
 surtidor::surtidor(string _codigo, string _modelo, bool _estado) {
     codigo = _codigo;
@@ -116,3 +117,119 @@ ventas.close();
 void surtidor::activar(bool activa) {
     estado = activa;
 }
+
+
+//----------------------Métodos de la clase Tanque-----------------------------------------------------------
+//Definición del constructor.
+Tanque::Tanque(float _capacidad_regular,float _capacidad_premium,float _capacidad_ecoextra_,string _codigo){
+    capacidad_regular=_capacidad_regular;
+    capacidad_premium=_capacidad_premium;
+    capacidad_ecoextra=_capacidad_ecoextra_;
+    codigo=_codigo;
+    fstream archivo("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt", ios::in | ios::out| ios::app);
+    archivo<<_codigo<<"@"<<_capacidad_regular<<"@"<<_capacidad_premium<<"@"<<_capacidad_ecoextra_<<"\n";
+    archivo.close();
+}
+//Definición del destructor.
+Tanque::~Tanque(){
+}
+
+//método encargado de entrgar el combustible del tanque central.
+void Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada) {
+    ifstream archivoEntrada("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt");
+    if (!archivoEntrada.is_open()) {
+        cerr << "No se pudo abrir el archivo para lectura." << endl;
+        return;
+    }
+
+    string linea;
+    string contenidoActualizado;
+    bool encontrado = false;
+
+    // Procesar cada línea del archivo
+    while (getline(archivoEntrada, linea)) {
+        string codigo, capacidad1, capacidad2, capacidad3;
+
+        // Separar la línea en codigo y las capacidades de los tres combustibles
+        unsigned short pos1 = linea.find('@');
+        unsigned short pos2 = linea.find('@', pos1 + 1);
+        unsigned short pos3 = linea.find('@', pos2 + 1);
+
+        if (pos1 != string::npos && pos2 != string::npos && pos3 != string::npos) {
+            codigo = linea.substr(0, pos1);
+            capacidad1 = linea.substr(pos1 + 1, pos2 - pos1 - 1);
+            capacidad2 = linea.substr(pos2 + 1, pos3 - pos2 - 1);
+            capacidad3 = linea.substr(pos3 + 1);
+
+            // Si se encuentra la estación, actualizar la capacidad
+            if (codigo == c_estacion) {
+                float nueva_capacidad;
+
+                switch (tipo_comb) {
+                case 1:
+                    nueva_capacidad = stof(capacidad1) - c_entregada;
+                    capacidad1 = to_string(nueva_capacidad);
+                    break;
+                case 2:
+                    nueva_capacidad = stof(capacidad2) - c_entregada;
+                    capacidad2 = to_string(nueva_capacidad);
+                    break;
+                case 3:
+                    nueva_capacidad = stof(capacidad3) - c_entregada;
+                    capacidad3 = to_string(nueva_capacidad);
+                    break;
+                default:
+                    cerr << "Tipo de combustible no válido." << endl;
+                    return;
+                }
+                encontrado = true;
+            }
+
+            // Volver a formar la línea actualizada
+            contenidoActualizado += codigo + "@" + capacidad1 + "@" + capacidad2 + "@" + capacidad3 + "\n";
+        }
+    }
+
+    archivoEntrada.close();
+
+    if (!encontrado) {
+        cerr << "Estación no encontrada." << endl;
+        return;
+    }
+
+    // Escribir el contenido actualizado en el archivo
+    ofstream archivoSalida("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt", ios::trunc);
+    if (archivoSalida.is_open()) {
+        archivoSalida << contenidoActualizado;
+        archivoSalida.close();
+    } else {
+        cerr << "No se pudo abrir el archivo para escritura." << endl;
+    }
+}
+//----------------------Métodos de la clase Estación de servicio-----------------------------------------------------------
+//Definicion del constructor.
+Estacion_de_servicio::Estacion_de_servicio(string _nombre, string _codigo, string _gerente, string _region, string _ubi_geografica, unsigned short _c_islas){
+    nombre=_nombre;
+    codigo=_codigo;
+    gerente=_gerente;
+    region=_region;
+    ubi_geografica=_ubi_geografica;
+    c_islas=_c_islas;
+}
+Estacion_de_servicio::~Estacion_de_servicio(){
+}
+string Estacion_de_servicio:: mostrar_codigo(){
+    return codigo;
+}
+//----------------------Verificación de fugas-----------------------------------------------------------
+
+void revisar_fugas(unsigned short v_regular, unsigned short v_premium, unsigned short v_extra,unsigned short capacidad){
+    if((v_regular+v_premium+v_extra)>(0.95*capacidad)){
+        cout<<"No hay fugas";
+    }
+    else{
+        cout<<"hay fugas";
+    }
+}
+
+
