@@ -2,6 +2,8 @@
 #include <cstring>
 #include <fstream>
 #include <string>
+#include<random>
+#include<ctime>
 #include "clases.h"
 
 using namespace std;
@@ -293,19 +295,53 @@ void Tanque::mostrar_combustible_gastado() {
     // Cerrar el archivo
     archivo.close();
 }
+void Tanque::asignar_capacidad(){
+    srand(time(0));
 
+    // Generar un valor aleatorio para k entre 100 y 200 (ambos incluidos)
+    int k = rand() % 101 + 100;
+
+    // Repartir k en tres variables
+    capacidad_regular= rand() % (k + 1);         // Primer número aleatorio entre 0 y k
+    capacidad_ecoextra= rand() % (k - capacidad_regular+ 1);     // Segundo número aleatorio entre 0 y (k - a)
+    capacidad_premium = k - capacidad_ecoextra- capacidad_regular;                // Tercer número, es el restante para que la suma sea k
+}
 //----------------------Métodos de la clase Estación de servicio-----------------------------------------------------------
 //Definicion del constructor.
-Estacion_de_servicio::Estacion_de_servicio(string _nombre, string _codigo, string _gerente, string _region, string _ubi_geografica, unsigned short _c_islas){
-    nombre=_nombre;
-    codigo=_codigo;
-    gerente=_gerente;
-    region=_region;
-    ubi_geografica=_ubi_geografica;
-    c_islas=_c_islas;
-    fstream archivo("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_estaciones.txt", ios::in | ios::out| ios::app);
-    archivo<<_codigo<<"@"<<_nombre<<"@"<<_gerente<<"@"<<_region<<"@"<<_ubi_geografica<<c_islas<<"\n";
-    archivo.close();
+
+Estacion_de_servicio::Estacion_de_servicio(string _nombre, string _codigo, string _gerente, string _region, string _ubi_geografica, unsigned short _c_islas) {
+    nombre = _nombre;
+    codigo = _codigo;
+    gerente = _gerente;
+    region = _region;
+    ubi_geografica = _ubi_geografica;
+    c_islas = _c_islas;
+
+    // Abrir el archivo en modo lectura para verificar si el código ya existe
+    fstream archivo("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_estaciones.txt", ios::in);
+    string linea;
+    bool estacion_existe = false;
+
+    // Verificar si el código ya existe en el archivo
+    while (getline(archivo, linea)) {
+        // Buscar el código al principio de la línea antes del primer '@'
+        int posicion_arroba = linea.find('@');
+        if (posicion_arroba != string::npos) {
+            string codigo_en_archivo = linea.substr(0, posicion_arroba);  // Obtener el código
+            if (codigo_en_archivo == _codigo) {
+                estacion_existe = true;
+                break;
+            }
+        }
+    }
+    archivo.close();  // Cerrar archivo de lectura
+
+    // Si la estación no existe, escribir en el archivo
+    if (!estacion_existe) {
+        fstream archivo_salida("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_estaciones.txt", ios::app);
+        archivo_salida << _codigo << "@" << _nombre << "@" << _gerente << "@" << _region << "@" << _ubi_geografica << "@" << _c_islas << "\n";
+        archivo_salida.close();  // Cerrar archivo de escritura
+    }
 }
 Estacion_de_servicio::~Estacion_de_servicio(){
 }

@@ -34,6 +34,7 @@ public:
     ~Tanque();
     void entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada);
     void mostrar_combustible_gastado();
+    void asignar_capacidad();
     //Función amiga de fugas, esta será una función de carácter general.
     friend void revisar_fugas(unsigned short c_regular, unsigned short c_premium, unsigned short c_extra,unsigned short capacidad);
 };
