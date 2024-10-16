@@ -23,7 +23,7 @@ int main() {
     Estacion_de_servicio se3=Estacion_de_servicio("termax9","009","raul","sur","4°12'06.6'S 69°56'47.0'W",4);
 
     //tanque
-    /*
+
     Tanque te1= Tanque();
     Tanque te2=Tanque();
     Tanque te3= Tanque();
@@ -33,7 +33,6 @@ int main() {
     Tanque te7= Tanque();
     Tanque te8=Tanque();
     Tanque te9= Tanque();
-*/
     //surtidores.
 
 
@@ -87,7 +86,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
         &sse31, &sse32, &sse33
     };
 
-
+Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
 
 
 
@@ -111,15 +110,15 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
         cin>>opcion;
         if(opcion=='e'){
             unsigned short eleccion_estacion;
-            cout<<"1) termax2";
-            cout<<"2) termax3";
-            cout<<"3) termax4";
-            cout<<"4) termax5";
-            cout<<"5) termax6";
-            cout<<"6) termax7";
-            cout<<"7) termax8";
-            cout<<"8) termax9";
-            cout<<"9) termax10";
+            cout<<"1) termax2"<<endl;
+            cout<<"2) termax3"<<endl;
+            cout<<"3) termax4"<<endl;
+            cout<<"4) termax5"<<endl;
+            cout<<"5) termax6"<<endl;
+            cout<<"6) termax7"<<endl;
+            cout<<"7) termax8"<<endl;
+            cout<<"8) termax9"<<endl;
+            cout<<"9) termax10"<<endl;
             cin>>eleccion_estacion;
             switch(eleccion_estacion){
             case 1:
@@ -127,9 +126,9 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"Bienvenido a termax2"<<endl;
                 cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
                 cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
-                cout<<"si desea ver las ventas de un surtidor 2"<<endl;
-                cout<<"si desea consultar el histórico de transacciones de un surtidor 3"<<endl;
-                cout<<"si desea consultar la cantidad de combustible vendida 4"<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
                 cin>>opciones_estacion;
                 string codi_surti;
                 bool encontrado=false;
@@ -155,9 +154,12 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                         }
                     }
                     break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
 
+                    break;
                 }
-
+            //////////
             }
         }
         break;
