@@ -20,6 +20,10 @@ surtidor::~surtidor(){
 }
 // Definición del método encargado de registrar la venta.
  void surtidor::venta(string codigo_estacion,string cedula, string fecha, string hora, char manera_pago,unsigned short tipo_comb, float c_disponible, float c_pedida,const unsigned long *precio_galon){
+     if(estado==false){
+         cout<<"El surtidor no esta activo";
+         return;
+     }
     fstream ventas("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\ventas.txt", std::ios::out | std::ios::app);
     float c_dinero = 0;
     if (!ventas.is_open()) {
@@ -53,6 +57,10 @@ surtidor::~surtidor(){
 
 //Definición del método encargado de ver las ventas.
 void surtidor::consultar_venta() {
+    if(estado==false){
+        cout<<"El surtidor no esta activo";
+        return;
+    }
     fstream ventas("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\ventas.txt", std::ios::in);
     string linea;
     while (getline(ventas, linea)) {
@@ -146,6 +154,9 @@ void surtidor::consultar_venta() {
 
 
 string surtidor::mostar_codigo(){
+    if(estado==false){
+        return "no esta activa la estacion";
+    }
     return codigo;
 }
 // Definición del método encargado de activar o desactivar el surtidor.
@@ -156,7 +167,7 @@ void surtidor::activar(bool activa) {
 
 //----------------------Métodos de la clase Tanque-----------------------------------------------------------
 //Definición del constructor.
-Tanque::Tanque(float _capacidad_regular,float _capacidad_premium,float _capacidad_ecoextra_,string _codigo){
+Tanque::Tanque(unsigned short _capacidad_regular,unsigned short _capacidad_premium, unsigned short _capacidad_ecoextra_,string _codigo){
     capacidad_regular=_capacidad_regular;
     capacidad_premium=_capacidad_premium;
     capacidad_ecoextra=_capacidad_ecoextra_;
@@ -241,6 +252,48 @@ void Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, f
         cerr << "No se pudo abrir el archivo para escritura." << endl;
     }
 }
+
+
+void Tanque::mostrar_combustible_gastado() {
+    // Abrir el archivo
+    ifstream archivo("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt");
+    if (!archivo.is_open()) {
+        cout << "No se pudo abrir el archivo." << endl;
+        return;
+    }
+
+    string linea;
+    while (getline(archivo, linea)) {
+        // Dividir la línea para extraer las cantidades
+        int pos1 = linea.find('@');
+        int pos2 = linea.find('@', pos1 + 1);
+        int pos3 = linea.find('@', pos2 + 1);
+
+        // Extraer cantidades como strings y convertirlas a números
+        string codigo_estacion = linea.substr(0, pos1);
+        float cantidad_regular = stoi(linea.substr(pos1 + 1, pos2 - pos1 - 1));
+        float cantidad_premium = stoi(linea.substr(pos2 + 1, pos3 - pos2 - 1));
+        float cantidad_ecoextra = stoi(linea.substr(pos3 + 1));
+
+        // Calcular el combustible gastado para cada tipo
+        float gastado_regular = capacidad_regular - cantidad_regular;
+        float gastado_premium = capacidad_premium - cantidad_premium;
+        float gastado_ecoextra = capacidad_ecoextra - cantidad_ecoextra;
+        if(codigo_estacion==codigo){
+            // Mostrar el combustible gastado para esa estación
+            cout << "Estación " << codigo_estacion << ":" << endl;
+            cout << "Regular: " << gastado_regular << " galones" << endl;
+            cout << "Premium: " << gastado_premium << " galones" << endl;
+            cout << "Ecoextra: " << gastado_ecoextra << " galones" << endl;
+            cout << "-----------------------------" << endl;
+        }
+
+    }
+
+    // Cerrar el archivo
+    archivo.close();
+}
+
 //----------------------Métodos de la clase Estación de servicio-----------------------------------------------------------
 //Definicion del constructor.
 Estacion_de_servicio::Estacion_de_servicio(string _nombre, string _codigo, string _gerente, string _region, string _ubi_geografica, unsigned short _c_islas){

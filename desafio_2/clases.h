@@ -30,10 +30,10 @@ private:
     unsigned short capacidad_ecoextra;
     string codigo;
 public:
-    Tanque(float _capacidad_regular,float _capacidad_premium,float _capacidad_ecoextra, string _codigo);
+    Tanque(unsigned short _capacidad_regular,unsigned short _capacidad_premium,unsigned short _capacidad_ecoextra_,string _codigo);
     ~Tanque();
-   // float revisar_disponibilidad(unsigned short tipo_combustible);
     void entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada);
+    void mostrar_combustible_gastado();
     //Función amiga de fugas, esta será una función de carácter general.
     friend void revisar_fugas(unsigned short c_regular, unsigned short c_premium, unsigned short c_extra,unsigned short capacidad);
 };
@@ -48,7 +48,6 @@ private:
     string region;
     string ubi_geografica;
     unsigned short c_islas;
-    //Tanque tanque;
 
 public:
     // Métodos

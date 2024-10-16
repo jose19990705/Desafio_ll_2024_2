@@ -22,17 +22,16 @@ int main() {
     Estacion_de_servicio se2=Estacion_de_servicio("termax8","008","pepe","sur","2°26'23.7'N 76°38'37.6'W",4);
     Estacion_de_servicio se3=Estacion_de_servicio("termax9","009","raul","sur","4°12'06.6'S 69°56'47.0'W",4);
 
-    //tanque
-
-    Tanque te1= Tanque();
-    Tanque te2=Tanque();
-    Tanque te3= Tanque();
-    Tanque te4=Tanque();
-    Tanque te5= Tanque();
-    Tanque te6=Tanque();
-    Tanque te7= Tanque();
-    Tanque te8=Tanque();
-    Tanque te9= Tanque();
+   // (unsigned short _capacidad_regular,unsigned short _capacidad_premium,unsigned short _capacidad_ecoextra, string _codigo);
+    Tanque te1= Tanque(70,30,100,"001");
+    Tanque te2=Tanque(70,30,100,"002");
+    Tanque te3= Tanque(70,30,100,"003");
+    Tanque te4=Tanque(70,30,100,"004");
+    Tanque te5= Tanque(70,30,100,"005");
+    Tanque te6=Tanque(70,30,100,"006");
+    Tanque te7= Tanque(70,30,100,"007");
+    Tanque te8=Tanque(70,30,100,"008");
+    Tanque te9= Tanque(70,30,100,"009");
     //surtidores.
 
 
@@ -86,7 +85,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
         &sse31, &sse32, &sse33
     };
 
-Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
+//Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
 
 
 
@@ -120,9 +119,12 @@ Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
             cout<<"8) termax9"<<endl;
             cout<<"9) termax10"<<endl;
             cin>>eleccion_estacion;
+            string codi_surti;
+            char desactivar;
+            bool encontrado=false;
+            unsigned short opciones_estacion;
             switch(eleccion_estacion){
             case 1:
-                unsigned short opciones_estacion;
                 cout<<"Bienvenido a termax2"<<endl;
                 cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
                 cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
@@ -130,8 +132,7 @@ Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cin>>opciones_estacion;
-                string codi_surti;
-                bool encontrado=false;
+
                 switch(opciones_estacion){
                 case 1:
                     ver_ventas_estacion("001");
@@ -156,10 +157,504 @@ Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
                     break;
                 case 3:
                     cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
-
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
                     break;
                 }
-            //////////
+            case 2:
+                cout<<"Bienvenido a termax3"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                /////////////////////////////////////////////////
+                break;
+            case 3:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            case 4:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            case 5:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            case 6:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            case 7:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            case 8:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
+            case 9:
+                cout<<"Bienvenido a termax2"<<endl;
+                cout<<"los códigos de los surtidores existentes son: 0011,0012,0013"<<endl;
+                cout<<"si desea ver las ventas hechas en la estacion presione 1 "<<endl;
+                cout<<"si desea consultar el histórico de transacciones de un surtidor 2"<<endl;
+                cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
+                cout<<"si desea activar o desactivar un surtidor 4";
+                cin>>opciones_estacion;
+
+                switch(opciones_estacion){
+                case 1:
+                    ver_ventas_estacion("001");
+                    break;
+                case 2:
+                    cout<<"Ingrese el codigo del surtidor:";
+                    cin>>codi_surti;
+                    for(unsigned short i=0;i<9;i++){
+                        if(estaciones[i]->mostrar_codigo()=="001"){
+                            for(int k=0;k<27;k++){
+                                if(surti_estaciones[k]->mostar_codigo()==codi_surti){
+                                    surti_estaciones[k]->consultar_venta();
+                                    encontrado=true;
+                                    break;
+                                }
+                            }
+                        }
+                        if(encontrado){
+                            break;
+                        }
+                    }
+                    break;
+                case 3:
+                    cout<<"la Cantidad de combustible vendido por cada clase es: "<<endl;
+                    te1.mostrar_combustible_gastado();
+                    break;
+                case 4:
+                    cout<<"Ingrese la el código de la estación que desea desactivar o activar: ";
+                    cin>>codi_surti;
+                    cout<<"si desea desactivar una estacion presione 1, si desea activarla presione 2: ";
+                    cin>>desactivar;
+                    if(desactivar=='1'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(false);
+                                break;
+                            }
+                        }
+                    }
+                    else if(desactivar=='2'){
+                        for(int i =0; i<27;i++){
+                            if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                                surti_estaciones[i]->activar(true);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                break;
             }
         }
         break;
