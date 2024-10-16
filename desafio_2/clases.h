@@ -10,18 +10,18 @@ using namespace std;
 */
 class surtidor {
 private:
-    string codigo, modelo;
+    string codigo, modelo,c_estacion;
     bool estado;
 public:
     //Constructor y destructor de la clase.
-    surtidor(string _codigo, string _modelo, bool _estado);
+    surtidor(string _c_estacion, string _modelo, string _codigo, bool _estado);
     ~surtidor();
     //metodos.
-    void venta(string cedula, string fecha, string hora, char manera_pago,unsigned short tipo_comb, float c_disponible, float c_pedida,const unsigned long *precio_galon);
-    void consultar_venta( string codigo_surtidor);
+    void venta(string codigo_estacion,string cedula, string fecha, string hora, char manera_pago,unsigned short tipo_comb, float c_disponible, float c_pedida,const unsigned long *precio_galon);
+    void consultar_venta();
+    string mostar_codigo();
     void activar(bool activa);
 };
-
 
 class Tanque{
 private:
@@ -58,6 +58,35 @@ public:
 
 
 };
+
+//---------------------------------subprogramas--------------------------------------------
+
+void eliminar_datos(string codigo_maquina);
+void menu_estaciones();
+void ver_ventas_estacion(string c_estacion);
+
+//void agregar_surtidor(string codigo_estacion, string codigo_surtidor);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif // CLASES_H
