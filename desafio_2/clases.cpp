@@ -21,17 +21,19 @@ surtidor::~surtidor(){
 
 }
 // Definición del método encargado de registrar la venta.
- void surtidor::venta(string codigo_estacion,string cedula, string fecha, string hora, char manera_pago,unsigned short tipo_comb, float c_disponible, float c_pedida,const unsigned long *precio_galon){
-     if(estado==false){
-         cout<<"El surtidor no esta activo";
-         return;
-     }
+void surtidor::venta(string codigo_estacion, string cedula, string fecha, string hora, char manera_pago, unsigned short tipo_comb, float c_disponible, float c_pedida, const unsigned long *precio_galon) {
+    if (estado == false) {
+        cout << "El surtidor no está activo" << endl;
+        return;
+    }
+
     fstream ventas("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\ventas.txt", std::ios::out | std::ios::app);
-    float c_dinero = 0;
+    float c_dinero = 0,c_entregada_c;
+    string tipo_pago;
     if (!ventas.is_open()) {
         cerr << "Error en la apertura del archivo." << endl;
     } else {
-        switch(tipo_comb) {
+        switch (tipo_comb) {
         case 1:
             c_dinero = precio_galon[0];
             break;
@@ -45,16 +47,37 @@ surtidor::~surtidor(){
 
         if (c_pedida > c_disponible) {
             c_dinero *= c_disponible;
+            c_entregada_c=c_disponible;
         } else {
             c_dinero *= c_pedida;
+            c_entregada_c=c_pedida;
         }
 
         // Escribir los datos al final del archivo en una nueva línea
-        ventas <<codigo_estacion<<"@"<< codigo << "@" << cedula << "@" << fecha << "@" << hora << "@" << tipo_comb << "@" << c_dinero << "@" << manera_pago << "\n";
+        ventas << codigo_estacion << "@" << codigo << "@" << cedula << "@" << fecha << "@" << hora << "@" << tipo_comb << "@" << c_dinero << "@" << manera_pago << "\n";
+        if(manera_pago=='e'){
+            tipo_pago="Efectivo";
+        }
+        else if(manera_pago=='d'){
+            tipo_pago="Debito";
+        }
+        else {
+            tipo_pago="credito";
+        }
+        // Imprimir los datos de la venta
+        cout << "Venta realizada: \n";
+        cout << "Estacion: " << codigo_estacion << "\n"
+             << "Surtidor: " << codigo << "\n"
+             << "Cedula: " << cedula << "\n"
+             << "Fecha: " << fecha << "\n"
+             << "Hora: " << hora << "\n"
+             << "Tipo de combustible: " << tipo_comb << "\n"
+             << "Cantidad entregada:  "<<c_entregada_c<<" litros "<<"\n"
+             << "Monto de la venta: $" << c_dinero << "\n"
+             << "Forma de pago: " << tipo_pago << endl;
     }
 
     ventas.close();
-
 }
 
 //Definición del método encargado de ver las ventas.
@@ -169,13 +192,43 @@ void surtidor::activar(bool activa) {
 
 //----------------------Métodos de la clase Tanque-----------------------------------------------------------
 //Definición del constructor.
-Tanque::Tanque(unsigned short _capacidad_regular,unsigned short _capacidad_premium, unsigned short _capacidad_ecoextra_,string _codigo){
-    capacidad_regular=_capacidad_regular;
-    capacidad_premium=_capacidad_premium;
-    capacidad_ecoextra=_capacidad_ecoextra_;
-    codigo=_codigo;
-    fstream archivo("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt", ios::in | ios::out| ios::app);
-    archivo<<_codigo<<"@"<<_capacidad_regular<<"@"<<_capacidad_premium<<"@"<<_capacidad_ecoextra_<<"\n";
+Tanque::Tanque(unsigned short _capacidad_regular, unsigned short _capacidad_premium, unsigned short _capacidad_ecoextra_, string _codigo) {
+    capacidad_regular = _capacidad_regular;
+    capacidad_premium = _capacidad_premium;
+    capacidad_ecoextra = _capacidad_ecoextra_;
+    codigo = _codigo;
+
+    // Abrir el archivo para lectura y escritura
+    fstream archivo("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt", ios::in | ios::out | ios::app);
+
+    // Verificar si el archivo se abrió correctamente
+    if (!archivo.is_open()) {
+        cerr << "No se pudo abrir el archivo." << endl;
+        return;
+    }
+
+    // Verificar si el código ya está registrado
+    string linea;
+    bool codigo_existe = false;
+
+    while (getline(archivo, linea)) {
+        unsigned short pos = linea.find('@');
+        if (pos != string::npos) {
+            string codigo_existente = linea.substr(0, pos);  // Extraer el código de la línea
+            if (codigo_existente == _codigo) {
+                codigo_existe = true;
+                break;  // Salir del bucle si el código ya está registrado
+            }
+        }
+    }
+
+    // Si el código no existe, registrar el tanque
+    if (!codigo_existe) {
+        archivo.clear();  // Limpiar el estado del archivo para poder escribir
+        archivo.seekp(0, ios::end);  // Mover el cursor al final del archivo para escribir
+        archivo << _codigo << "@" << _capacidad_regular << "@" << _capacidad_premium << "@" << _capacidad_ecoextra_ << "\n";
+    }
+    // Cerrar el archivo
     archivo.close();
 }
 //Definición del destructor.
@@ -183,16 +236,17 @@ Tanque::~Tanque(){
 }
 
 //método encargado de entrgar el combustible del tanque central.
-void Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada) {
+float Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada) {
     ifstream archivoEntrada("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt");
     if (!archivoEntrada.is_open()) {
         cerr << "No se pudo abrir el archivo para lectura." << endl;
-        return;
+        return 0;
     }
 
     string linea;
     string contenidoActualizado;
     bool encontrado = false;
+    float cantidad_entregada;
 
     // Procesar cada línea del archivo
     while (getline(archivoEntrada, linea)) {
@@ -212,23 +266,34 @@ void Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, f
             // Si se encuentra la estación, actualizar la capacidad
             if (codigo == c_estacion) {
                 float nueva_capacidad;
-
                 switch (tipo_comb) {
                 case 1:
                     nueva_capacidad = stof(capacidad1) - c_entregada;
+                    if(nueva_capacidad<0){
+                        nueva_capacidad=0;
+                        cantidad_entregada=stof(capacidad1);
+                    }
                     capacidad1 = to_string(nueva_capacidad);
                     break;
                 case 2:
                     nueva_capacidad = stof(capacidad2) - c_entregada;
+                    if(nueva_capacidad<0){
+                        nueva_capacidad=0;
+                        cantidad_entregada=stof(capacidad2);
+                    }
                     capacidad2 = to_string(nueva_capacidad);
                     break;
                 case 3:
                     nueva_capacidad = stof(capacidad3) - c_entregada;
+                    if(nueva_capacidad<0){
+                        nueva_capacidad=0;
+                        cantidad_entregada=stof(capacidad3);
+                    }
                     capacidad3 = to_string(nueva_capacidad);
                     break;
                 default:
                     cerr << "Tipo de combustible no válido." << endl;
-                    return;
+                    return 0;
                 }
                 encontrado = true;
             }
@@ -242,7 +307,7 @@ void Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, f
 
     if (!encontrado) {
         cerr << "Estación no encontrada." << endl;
-        return;
+        return 0;
     }
 
     // Escribir el contenido actualizado en el archivo
@@ -253,6 +318,7 @@ void Tanque::entregar_combustible(string c_estacion, unsigned short tipo_comb, f
     } else {
         cerr << "No se pudo abrir el archivo para escritura." << endl;
     }
+    return cantidad_entregada;
 }
 
 

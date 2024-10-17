@@ -9,6 +9,7 @@ using namespace std;
 
 
 int main() {
+    bool valido=false;
     unsigned long precio_litro[] = {10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000};
     // definicion de Estaciones del norte
     Estacion_de_servicio ne1=Estacion_de_servicio("termax2","001","jose","norte","10°58'06.6'N 74°46'52.7'W",4);
@@ -25,17 +26,6 @@ int main() {
 
    // (unsigned short _capacidad_regular,unsigned short _capacidad_premium,unsigned short _capacidad_ecoextra, string _codigo);
 
-
-    Tanque te1= Tanque(70,30,100,"001");
-    Tanque te2=Tanque(70,30,100,"002");
-    Tanque te3= Tanque(70,30,100,"003");
-    Tanque te4=Tanque(70,30,100,"004");
-    Tanque te5= Tanque(70,30,100,"005");
-    Tanque te6=Tanque(70,30,100,"006");
-    Tanque te7= Tanque(70,30,100,"007");
-    Tanque te8=Tanque(70,30,100,"008");
-    Tanque te9= Tanque(70,30,100,"009");
-    //surtidores.
 
 
     surtidor sne11=surtidor("001","10","0011",true);
@@ -74,6 +64,18 @@ int main() {
     surtidor sse32=surtidor("009","10","0092",true);
     surtidor sse33=surtidor("009","10","0093",true);
 
+    Tanque te1= Tanque(70,30,100,"001");
+    Tanque te2=Tanque(70,30,100,"002");
+    Tanque te3= Tanque(70,30,100,"003");
+    Tanque te4=Tanque(70,30,100,"004");
+    Tanque te5= Tanque(70,30,100,"005");
+    Tanque te6=Tanque(70,30,100,"006");
+    Tanque te7= Tanque(70,30,100,"007");
+    Tanque te8=Tanque(70,30,100,"008");
+    Tanque te9= Tanque(70,30,100,"009");
+    //surtidores.
+
+
 Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, &se2, &se3};
 
     surtidor* surti_estaciones[] = {
@@ -94,6 +96,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
 
 //menú para el control de la red.
     char opcion;
+    string salir;
     cout<<"Estas son las estaciones de servicio del norte: "<<endl;
     cout<<"termax 1"<<endl;
     cout<<"termax 2"<<endl;
@@ -122,9 +125,11 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
             cout<<"9) termax 9"<<endl;
             cin>>eleccion_estacion;
             string codi_surti;
-            char desactivar;
+            char desactivar,metodo_pago;
+            string fecha,cedula,hora;
+            float cantidad_de_gasolina;
             bool encontrado=false;
-            unsigned short opciones_estacion;
+            unsigned short opciones_estacion,tipo_comb;
             switch(eleccion_estacion){
             case 1:
                 cout<<"Bienvenido a termax 1"<<endl;
@@ -134,6 +139,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4"<<endl;
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -187,7 +193,39 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te1.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0011, 0012, 0013): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0011" || codi_surti == "0012" || codi_surti == "0013") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago, 'e' si es efectivo, 'd' si es debito y 'c', si es credito:";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("001",cedula,fecha,hora,metodo_pago,tipo_comb,te1.entregar_combustible("001",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
+                break;
             case 2:
                 cout<<"Bienvenido a termax 2 "<<endl;
                 cout<<"los códigos de los surtidores existentes son: 0021,0022,0023"<<endl;
@@ -196,6 +234,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4"<<endl;
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -249,6 +288,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te2.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0021, 0022, 0023): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0021" || codi_surti == "0022" || codi_surti == "0023") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("002",cedula,fecha,hora,metodo_pago,tipo_comb,te2.entregar_combustible("002",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
                 /////////////////////////////////////////////////
                 break;
@@ -260,6 +330,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -313,6 +384,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te3.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0031, 0032, 0033): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0031" || codi_surti == "0032" || codi_surti == "0033") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("003",cedula,fecha,hora,metodo_pago,tipo_comb,te3.entregar_combustible("003",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
 
                 }
                 break;
@@ -324,6 +426,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -377,6 +480,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te4.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0041, 0042, 0043): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0041" || codi_surti == "0042" || codi_surti == "0043") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("004",cedula,fecha,hora,metodo_pago,tipo_comb,te4.entregar_combustible("004",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
                 break;
             case 5:
@@ -387,6 +521,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -440,6 +575,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te5.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0051, 0052, 0053): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0051" || codi_surti == "0052" || codi_surti == "0053") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("005",cedula,fecha,hora,metodo_pago,tipo_comb,te5.entregar_combustible("005",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
                 break;
             case 6:
@@ -450,6 +616,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -503,6 +670,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te6.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0061, 0062, 0063): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0061" || codi_surti == "0062" || codi_surti == "0063") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("006",cedula,fecha,hora,metodo_pago,tipo_comb,te6.entregar_combustible("006",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
                 break;
             case 7:
@@ -513,6 +711,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -566,6 +765,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 case 5:
                     te7.asignar_capacidad();
                     break;
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0071, 0072, 0073): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0071" || codi_surti == "0072" || codi_surti == "0073") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("007",cedula,fecha,hora,metodo_pago,tipo_comb,te7.entregar_combustible("007",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
                 break;
             case 8:
@@ -576,6 +806,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"si desea consultar la cantidad de combustible vendida 3"<<endl;
                 cout<<"si desea activar o desactivar un surtidor 4";
                 cout<<"si desea asignar aleatoriamente la cantidad del tanque principal 5"<<endl;
+                cout<<"si desea hacer una venta, presione 6";
                 cin>>opciones_estacion;
 
                 switch(opciones_estacion){
@@ -628,6 +859,37 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                     break;
                 case 5:
                     te8.asignar_capacidad();
+                case 6:
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0081, 0082, 0083): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0081" || codi_surti == "0082" || codi_surti == "0083") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("008",cedula,fecha,hora,metodo_pago,tipo_comb,te8.entregar_combustible("008",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
+                    break;
                 }
                 break;
             case 9:
@@ -693,8 +955,35 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                     te9.asignar_capacidad();
                     break;
                 case 6:
-                    // estoy haciendo el codigo  para el surtidor que hará la venta.
-                    cout<<"ingrese el codigo de la estación que hará la venta:";
+                    cout<<"¿Que cantidad de gasolina desea recargar?: ";
+                    cin>> cantidad_de_gasolina;
+                    while (!valido) {
+                        cout << "Diga el surtidor que desea usar (0091, 0092, 0093): ";
+                        cin >> codi_surti;
+                        if (codi_surti == "0091" || codi_surti == "0092" || codi_surti == "0093") {
+                            cout << "Surtidor correcto." << endl;
+                            valido=true;
+                        } else {
+                            cout << "Entrada incorrecta. Intente de nuevo." << endl;
+                        }
+                    }
+                    valido=false;
+                    for(int i=0; i<27;i++){
+                        if(surti_estaciones[i]->mostar_codigo()==codi_surti){
+                            cout<<"ingrese la cédula del cliente: ";
+                            cin>> cedula;
+                            cout<<"Ingrese la fecha, el formato es: año/mes/dia: ";
+                            cin>>fecha;
+                            cout<<"Ingrese la hora, el formato es: hora:minutos, en formato 24 horas: ";
+                            cin>> hora;
+                            cout<<"Ingrese el método de pago: ";
+                            cin>>metodo_pago;
+                            cout<<"ingrese el tipo de combustible, el regular es 1, el premium 2, y el 3 es ecoextra: ";
+                            cin>>tipo_comb;
+                            surti_estaciones[i]->venta("009",cedula,fecha,hora,metodo_pago,tipo_comb,te9.entregar_combustible("009",tipo_comb,cantidad_de_gasolina),cantidad_de_gasolina,&precio_litro[0]);
+                            break;
+                        }
+                    }
                     break;
                 }
                 break;
@@ -728,7 +1017,11 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                 cout<<"Region no encontrada";
             }
         }
-        break;
+        cout<<"si desea salir del menu presione si, sino, oprima otra tecla: ";
+        cin>>salir;
+        if(salir=="si"){
+            break;
+        }
     }
 
 

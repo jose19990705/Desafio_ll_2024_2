@@ -32,7 +32,7 @@ private:
 public:
     Tanque(unsigned short _capacidad_regular,unsigned short _capacidad_premium,unsigned short _capacidad_ecoextra_,string _codigo);
     ~Tanque();
-    void entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada);
+    float entregar_combustible(string c_estacion, unsigned short tipo_comb, float c_entregada);
     void mostrar_combustible_gastado();
     void asignar_capacidad();
     //Función amiga de fugas, esta será una función de carácter general.
