@@ -1,0 +1,9 @@
+001@termax2@jose@norte@10°58'06.6'N 74°46'52.7'W@4
+002@termax3@marta@norte@11°14'26.9'N 74°11'56.4'W@4
+003@termax4@Andres@norte@10°23'27.6'N 75°28'45.8'W@4
+004@termax5@jose@centro@4°36'35.0'N 74°05'40.2'W@4
+005@termax6@marta@centro@11°14'26.9'N 74°11'56.4'W@4
+006@termax7@Andres@centro@10°23'27.6'N 75°28'45.8'W@4
+007@termax7@juan@sur@2°57'31.0'N 75°01'22.0'W@4
+008@termax8@pepe@sur@2°26'23.7'N 76°38'37.6'W@4
+009@termax9@raul@sur@4°12'06.6'S 69°56'47.0'W@4
