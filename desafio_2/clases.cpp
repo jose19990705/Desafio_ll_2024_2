@@ -54,7 +54,7 @@ void surtidor::venta(string codigo_estacion, string cedula, string fecha, string
         }
 
         // Escribir los datos al final del archivo en una nueva línea
-        ventas << codigo_estacion << "@" << codigo << "@" << cedula << "@" << fecha << "@" << hora << "@" << tipo_comb << "@" << c_dinero << "@" << manera_pago << "\n";
+        ventas << codigo_estacion << "@" << codigo << "@" << cedula << "@" << fecha << "@" << hora << "@" << tipo_comb << "@" << c_dinero << "@" << manera_pago <<"@"<<c_entregada_c<< "\n";
         if(manera_pago=='e'){
             tipo_pago="Efectivo";
         }
@@ -62,7 +62,7 @@ void surtidor::venta(string codigo_estacion, string cedula, string fecha, string
             tipo_pago="Debito";
         }
         else {
-            tipo_pago="credito";
+            tipo_pago="Credito";
         }
         // Imprimir los datos de la venta
         cout << "Venta realizada: \n";
@@ -72,6 +72,7 @@ void surtidor::venta(string codigo_estacion, string cedula, string fecha, string
              << "Fecha: " << fecha << "\n"
              << "Hora: " << hora << "\n"
              << "Tipo de combustible: " << tipo_comb << "\n"
+             << "cantidad pedida.     " << c_pedida  <<"\n"
              << "Cantidad entregada:  "<<c_entregada_c<<" litros "<<"\n"
              << "Monto de la venta: $" << c_dinero << "\n"
              << "Forma de pago: " << tipo_pago << endl;
@@ -372,6 +373,9 @@ void Tanque::asignar_capacidad(){
     capacidad_ecoextra= rand() % (k - capacidad_regular+ 1);     // Segundo número aleatorio entre 0 y (k - a)
     capacidad_premium = k - capacidad_ecoextra- capacidad_regular;                // Tercer número, es el restante para que la suma sea k
 }
+string Tanque::mostrar_codigo(){
+    return codigo;
+}
 //----------------------Métodos de la clase Estación de servicio-----------------------------------------------------------
 //Definicion del constructor.
 
@@ -415,13 +419,96 @@ string Estacion_de_servicio:: mostrar_codigo(){
     return codigo;
 }
 //----------------------Verificación de fugas-----------------------------------------------------------
+void Tanque::revisar_fugas() {
+    float almacenado_r = 0, almacenado_p = 0, almacenado_e = 0;
+    float vendido_r = 0, vendido_p = 0, vendido_e = 0;
 
-void revisar_fugas(unsigned short v_regular, unsigned short v_premium, unsigned short v_extra,unsigned short capacidad){
-    if((v_regular+v_premium+v_extra)>(0.95*capacidad)){
-        cout<<"No hay fugas";
+    // Leer cantidades almacenadas
+    ifstream archivo_combustible("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\cantidad_combustible.txt");
+    if (archivo_combustible.is_open()) {
+        string linea;
+        getline(archivo_combustible, linea);
+
+        // Separar las cantidades almacenadas manualmente
+        size_t pos = 0;
+        int index = 0;
+        while ((pos = linea.find('@')) != string::npos) {
+            string token = linea.substr(0, pos);
+            if (index == 0) {
+                almacenado_r = stof(token); // Convertir a float
+            } else if (index == 1) {
+                almacenado_p = stof(token); // Convertir a float
+            } else if (index == 2) {
+                almacenado_e = stof(token); // Convertir a float
+            }
+            linea.erase(0, pos + 1);
+            index++;
+        }
+        almacenado_e = stof(linea); // Última cantidad almacenada
+        archivo_combustible.close();
+    } else {
+        cout << "Error al abrir el archivo de cantidades de combustible." << endl;
+        return;
     }
-    else{
-        cout<<"hay fugas";
+
+    // Leer ventas
+    ifstream archivo_ventas("C:\\Users\\JOSE ANDRES\\Desktop\\desafio2_2024_2\\codigo\\desafio_2\\ventas.txt");
+    if (archivo_ventas.is_open()) {
+        string linea;
+        while (getline(archivo_ventas, linea)) {
+            // Separamos el tipo de combustible y la cantidad vendida
+            size_t pos = 0;
+            string tipo_comb;
+            float cantidad_vendida;
+
+            // Ignorar los primeros campos hasta llegar al tipo de combustible
+            for (int i = 0; i < 5; ++i) {
+                pos = linea.find('@');
+                linea.erase(0, pos + 1);
+            }
+
+            // Obtener el tipo de combustible
+            pos = linea.find('@');
+            tipo_comb = linea.substr(0, pos);
+            linea.erase(0, pos + 1);
+
+            // Obtener la cantidad vendida
+            cantidad_vendida = stof(linea); // Convertir a float
+
+            // Acumular las ventas según el tipo de combustible
+            if (tipo_comb == "Regular") {
+                vendido_r += cantidad_vendida;
+            } else if (tipo_comb == "Premium") {
+                vendido_p += cantidad_vendida;
+            } else if (tipo_comb == "Ecoextra") {
+                vendido_e += cantidad_vendida;
+            }
+        }
+        archivo_ventas.close();
+    } else {
+        cout << "Error al abrir el archivo de ventas." << endl;
+        return;
+    }
+
+    // Verificación para el combustible regular
+    if ((vendido_r + almacenado_r) >= (0.95 * capacidad_regular)) {
+        cout << "No hay fugas en Regular" << endl;
+    } else {
+        cout << "Hay fugas en Regular" << endl;
+    }
+
+    // Verificación para el combustible premium
+    if ((vendido_p + almacenado_p) >= (0.95 * capacidad_premium)) {
+        cout << "No hay fugas en Premium" << endl;
+    } else {
+        cout << "Hay fugas en Premium" << endl;
+    }
+
+    // Verificación para el combustible extra
+    if ((vendido_e + almacenado_e) >= (0.95 * capacidad_ecoextra)) {
+        cout << "No hay fugas en Extra" << endl;
+    } else {
+        cout << "Hay fugas en Extra" << endl;
     }
 }
 //------------------------------subprogramas----------------------------------------------

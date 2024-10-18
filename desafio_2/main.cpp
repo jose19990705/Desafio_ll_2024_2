@@ -90,7 +90,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
         &sse31, &sse32, &sse33
     };
 
-//Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
+Tanque* tanques[9] = {&te1, &te2, &te3, &te4, &te5, &te6, &te7, &te8, &te9};
 
 
 
@@ -859,6 +859,7 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
                     break;
                 case 5:
                     te8.asignar_capacidad();
+                    break;
                 case 6:
                     cout<<"¿Que cantidad de gasolina desea recargar?: ";
                     cin>> cantidad_de_gasolina;
@@ -1015,6 +1016,17 @@ Estacion_de_servicio* estaciones[] = {&ne1, &ne2, &ne3, &ce1, &ce2, &ce3, &se1, 
             }
             else{
                 cout<<"Region no encontrada";
+            }
+        }
+        else if(opcion=='f'){
+            string estacion_fuga;
+            cout<<"Ingrese el codigo de la estacion donde quiere revisar la fuga: ";
+            cin>>estacion_fuga;
+            for(int i=0; i<9; i++){
+                if (tanques[i]->mostrar_codigo()==estacion_fuga){
+                    tanques[i]->revisar_fugas();
+                    break;
+                }
             }
         }
         cout<<"si desea salir del menu presione si, sino, oprima otra tecla: ";
